@@ -15,3 +15,8 @@ class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
         fields = '__all__'
+    def Validate_due_date(self,value):
+        if value is None:
+            raise serializers.ValidationError("Due date is required")
+        return value
+

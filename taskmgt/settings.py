@@ -1,6 +1,6 @@
 from pathlib import Path
 from decouple import config  # Import config from decouple
-from  dotenv import load_dotenv
+from dotenv import load_dotenv
 
 # Load environment variables from .env file
 load_dotenv()
@@ -13,7 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config("DEBUG", default=False, cast=bool)
+DEBUG = config("DEBUG", default=False, cast=lambda v: v.lower() in ("true", "1"))
 
 # Split allowed hosts into a list
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="localhost").split(",")
@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "taskmanager",
+    "rest_framework.authtoken",
     "rest_framework",
 ]
 
@@ -99,3 +100,14 @@ STATIC_URL = "static/"
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Django REST Framework settings
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',  # Allow unrestricted access by default
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',  # Use token authentication
+        'rest_framework.authentication.SessionAuthentication',  # Optional, for session-based auth
+    ],
+}
