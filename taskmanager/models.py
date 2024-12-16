@@ -4,9 +4,13 @@ from django.conf import settings
 # Create your models here.
 class Category(models.Model):
     name = models.CharField(max_length=100,unique=True)
+    deleted = models.BooleanField(default=False) #soft delete
 
     def __str__(self):
         return self.name
+    def Soft_delete(self):
+        self.deleted = True
+        self.save()
 
 class Task(models.Model):
     PRIORITY_CHOICES = [
@@ -28,7 +32,12 @@ class Task(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     completed = models.BooleanField(default=False)
+    deleted = models.BooleanField(default=False) #soft delete
     assignee = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='assigned_tasks')
     
     def __str__(self):
         return self.title
+    
+    def Soft_delete(self):
+        self.deleted = True
+        self.save()
